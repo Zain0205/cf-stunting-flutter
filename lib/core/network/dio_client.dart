@@ -8,7 +8,7 @@ class DioClient {
 
   DioClient({String? baseUrl}) : _dio = Dio() {
     _dio.options = BaseOptions(
-      baseUrl: baseUrl ?? 'https://apidemo2.ziadsistem.com/api',
+      baseUrl: baseUrl ?? 'http://localhost:8080',
       connectTimeout: const Duration(seconds: 20),
       receiveTimeout: const Duration(seconds: 20),
       headers: {'Content-Type': 'application/json'},
