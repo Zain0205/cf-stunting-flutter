@@ -1,5 +1,5 @@
 import 'package:dio/dio.dart';
-import 'package:mobile_flutter/exception/app_exception.dart';
+import 'package:mobile_flutter/core/exception/app_exception.dart';
 // import 'package:ziad_v2_flutter/core/data/local/storage_service.dart';
 
 class DioClient {
