@@ -1,12 +1,12 @@
 import 'package:dio/dio.dart';
+import 'package:mobile_flutter/core/data/local/storage_service.dart';
 import 'package:mobile_flutter/core/exception/app_exception.dart';
-// import 'package:ziad_v2_flutter/core/data/local/storage_service.dart';
 
 class DioClient {
   final Dio _dio;
-  // final StorageService storageService;
+  final StorageService storageService;
 
-  DioClient({String? baseUrl}) : _dio = Dio() {
+  DioClient({required this.storageService, String? baseUrl}) : _dio = Dio() {
     _dio.options = BaseOptions(
       baseUrl: baseUrl ?? 'http://localhost:8080',
       connectTimeout: const Duration(seconds: 20),
@@ -18,10 +18,10 @@ class DioClient {
       LogInterceptor(responseBody: true, requestBody: true),
       InterceptorsWrapper(
         onRequest: (options, handler) async {
-          // final token = await storageService.get("token");
-          // if (token != null) {
-          //   options.headers['Authorization'] = 'Bearer $token';
-          // }
+          final token = await storageService.get("token");
+          if (token != null) {
+            options.headers['Authorization'] = 'Bearer $token';
+          }
           // Example: Add auth token if available
           // options.headers['Authorization'] = 'Bearer your_token';
           return handler.next(options);
