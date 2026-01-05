@@ -6,10 +6,10 @@ import 'package:mobile_flutter/feature/auth/domain/repository/auth_repository.da
 
 final logger = Logger();
 
-class Login {
+class LoginUsecase {
   final AuthRepository repository;
 
-  Login(this.repository);
+  LoginUsecase(this.repository);
 
   Future<Either<Failure, LoginResponseEntity>> call(
     String name,
