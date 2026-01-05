@@ -1,6 +1,7 @@
 import 'package:dartz/dartz.dart';
 import 'package:mobile_flutter/core/error/failure.dart';
 import 'package:mobile_flutter/core/exception/app_exception.dart';
+import 'package:mobile_flutter/feature/auth/data/datasource/auth_local_datasource.dart';
 import 'package:mobile_flutter/feature/auth/data/datasource/auth_remote_datasource.dart';
 import 'package:mobile_flutter/feature/auth/domain/entity/login_response_entity.dart';
 import 'package:mobile_flutter/feature/auth/domain/entity/register_response_entity.dart';
@@ -8,11 +9,11 @@ import 'package:mobile_flutter/feature/auth/domain/repository/auth_repository.da
 
 class AuthRepositoryImpl implements AuthRepository {
   final AuthRemoteDataSource remoteDataSource;
-  // final AuthLocalDataSource localDataSource;
+  final AuthLocalDataSource localDataSource;
 
   AuthRepositoryImpl({
     required this.remoteDataSource,
-    // required this.localDataSource,
+    required this.localDataSource,
   });
 
   @override
@@ -57,6 +58,27 @@ class AuthRepositoryImpl implements AuthRepository {
       return Left(ServerFailure(e.message, statusCode: e.statusCode));
     } on UnknownException catch (e) {
       return Left(ServerFailure(e.message, statusCode: e.statusCode));
+    }
+  }
+
+  @override
+  Future<Either<Failure, void>> logout() async {
+    try {
+      await localDataSource.clearToken();
+      await localDataSource.clearUser();
+      return const Right(null);
+    } catch (e) {
+      return Left(CacheFailure('Failed to logout'));
+    }
+  }
+
+  @override
+  Future<Either<Failure, void>> saveToken(String token) async {
+    try {
+      await localDataSource.saveToken(token);
+      return const Right(null);
+    } catch (e) {
+      return Left(CacheFailure("Failed to save token"));
     }
   }
 }

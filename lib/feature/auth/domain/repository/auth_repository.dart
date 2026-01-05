@@ -14,4 +14,6 @@ abstract class AuthRepository {
     String name,
     String password,
   );
+  Future<Either<Failure, void>> logout();
+  Future<Either<Failure, void>> saveToken(String token);
 }
