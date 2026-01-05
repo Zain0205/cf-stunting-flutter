@@ -5,6 +5,7 @@ import 'package:mobile_flutter/feature/auth/data/datasource/auth_local_datasourc
 import 'package:mobile_flutter/feature/auth/data/datasource/auth_remote_datasource.dart';
 import 'package:mobile_flutter/feature/auth/domain/entity/login_response_entity.dart';
 import 'package:mobile_flutter/feature/auth/domain/entity/register_response_entity.dart';
+import 'package:mobile_flutter/feature/auth/domain/entity/user_entity.dart';
 import 'package:mobile_flutter/feature/auth/domain/repository/auth_repository.dart';
 
 class AuthRepositoryImpl implements AuthRepository {
@@ -79,6 +80,16 @@ class AuthRepositoryImpl implements AuthRepository {
       return const Right(null);
     } catch (e) {
       return Left(CacheFailure("Failed to save token"));
+    }
+  }
+
+  @override
+  Future<Either<Failure, void>> saveUser(UserEntity user) async {
+    try {
+      await localDataSource.saveUser(user);
+      return const Right(null);
+    } catch (e) {
+      return Left(CacheFailure("Failed to save user"));
     }
   }
 }

@@ -2,6 +2,7 @@ import 'package:mobile_flutter/core/error/failure.dart';
 import 'package:mobile_flutter/feature/auth/domain/entity/login_response_entity.dart';
 import 'package:mobile_flutter/feature/auth/domain/entity/register_response_entity.dart';
 import 'package:dartz/dartz.dart';
+import 'package:mobile_flutter/feature/auth/domain/entity/user_entity.dart';
 
 abstract class AuthRepository {
   Future<Either<Failure, RegisterResponseEntity>> register({
@@ -16,4 +17,5 @@ abstract class AuthRepository {
   );
   Future<Either<Failure, void>> logout();
   Future<Either<Failure, void>> saveToken(String token);
+  Future<Either<Failure, void>> saveUser(UserEntity user);
 }

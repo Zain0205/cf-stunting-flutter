@@ -11,12 +11,12 @@ class LoginNotifier extends StateNotifier<AsyncValue<LoginResponseEntity?>> {
   LoginNotifier(this.ref, this.loginUseCase)
     : super(const AsyncValue.data(null));
 
-  Future<void> login(String username, String password) async {
+  Future<void> login(String name, String password) async {
     state = const AsyncValue.loading();
 
     await Future.delayed(const Duration(seconds: 2));
 
-    final result = await loginUseCase(username, password);
+    final result = await loginUseCase(name, password);
 
     state = result.fold(
       (failure) => AsyncValue.error(failure, StackTrace.current),

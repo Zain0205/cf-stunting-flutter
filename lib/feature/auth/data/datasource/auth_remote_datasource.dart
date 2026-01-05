@@ -81,11 +81,11 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
     try {
       final response = await dioClient.post(
         "/auth/login",
-        data: {"name": name, "password": password},
+        data: {"phone": name, "password": password},
       );
 
       if (response.statusCode == 200 && response.data != null) {
-        final data = response.data['date'];
+        final data = response.data['data'];
 
         if (data is Map<String, dynamic>) {
           final hasAccessToken = data.containsKey('token');
@@ -124,10 +124,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       // Preserve thrown ServerException/UnknownException without wrapping
       rethrow;
     } catch (e) {
-      throw UnknownException(
-        "An unexpected error occurred",
-        details: e.toString(),
-      );
+      throw UnknownException(e.toString(), details: e.toString());
     }
   }
 }

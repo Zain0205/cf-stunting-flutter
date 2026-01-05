@@ -20,6 +20,7 @@ class LoginUsecase {
     return result.fold((failure) => Left(failure), (loginResponse) async {
       // Save token
       final saveTokenResult = await repository.saveToken(loginResponse.token);
+      logger.i("TEST ${loginResponse.token}");
       saveTokenResult.fold(
         (failure) => logger.i("Error saving token: ${failure.message}"),
         (_) => logger.i("Token saved successfully"),

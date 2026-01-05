@@ -10,8 +10,8 @@ class LoginResponseModel {
 
   factory LoginResponseModel.fromJson(Map<String, dynamic> json) {
     return LoginResponseModel(
-      token: json['data']['token'],
-      user: UserModel.fromJson(json['data']['user']),
+      token: json['token'],
+      user: UserModel.fromJson(json['user']),
     );
   }
 
