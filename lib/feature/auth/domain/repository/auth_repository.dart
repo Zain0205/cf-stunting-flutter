@@ -1,4 +1,5 @@
 import 'package:mobile_flutter/core/error/failure.dart';
+import 'package:mobile_flutter/feature/auth/domain/entity/login_response_entity.dart';
 import 'package:mobile_flutter/feature/auth/domain/entity/register_response_entity.dart';
 import 'package:dartz/dartz.dart';
 
@@ -9,4 +10,8 @@ abstract class AuthRepository {
     required String password,
     required String category,
   });
+  Future<Either<Failure, LoginResponseEntity>> login(
+    String name,
+    String password,
+  );
 }
