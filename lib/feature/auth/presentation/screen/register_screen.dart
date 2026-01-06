@@ -6,8 +6,8 @@ import 'package:mobile_flutter/core/widget/primary_button.dart';
 import 'package:mobile_flutter/feature/auth/presentation/provider/register_provider.dart';
 
 class SelectOption {
-  final String label; // tampil di UI
-  final String value; // dikirim ke API
+  final String label;
+  final String value;
 
   const SelectOption({required this.label, required this.value});
 }
