@@ -1,6 +1,7 @@
 import 'package:go_router/go_router.dart';
 import 'package:mobile_flutter/feature/auth/presentation/screen/login_screen.dart';
 import 'package:mobile_flutter/feature/auth/presentation/screen/register_screen.dart';
+import 'package:mobile_flutter/feature/cf_diagnosis/presentation/screen/quisioner_screen.dart';
 import 'package:mobile_flutter/feature/home/presentation/screen/home_screen.dart';
 import 'package:mobile_flutter/feature/onboarding/presentation/screen/onboarding_screen.dart';
 import 'package:mobile_flutter/feature/splash/presentation/screen/splash_screen.dart';
@@ -36,6 +37,11 @@ class AppRoutes {
         path: RoutePath.mainNavigation,
         pageBuilder: (context, state) =>
             RouteTransitions.cupertino(child: HomeScreen(), state: state),
+      ),
+      GoRoute(
+        path: RoutePath.quisioner,
+        pageBuilder: (context, state) =>
+            RouteTransitions.cupertino(child: QuisionerScreen(), state: state),
       ),
     ],
   );
