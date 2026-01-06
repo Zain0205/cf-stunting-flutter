@@ -48,7 +48,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
               context,
             ).showSnackBar(const SnackBar(content: Text('Login berhasil')));
 
-            context.go(RoutePath.register);
+            context.go(RoutePath.mainNavigation);
           }
         },
         error: (error, _) {
