@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:mobile_flutter/core/widget/primary_button.dart';
+import 'package:mobile_flutter/routes/route_path.dart';
 
 class WHomeEmpty extends StatelessWidget {
   const WHomeEmpty({super.key});
@@ -32,7 +34,12 @@ class WHomeEmpty extends StatelessWidget {
               const SizedBox(height: 12),
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 40),
-                child: PrimaryButton(textButton: "Mulai Skrining"),
+                child: PrimaryButton(
+                  textButton: "Mulai Skrining",
+                  onTap: () {
+                    context.push(RoutePath.quisioner);
+                  },
+                ),
               ),
               const SizedBox(height: 50),
             ],
