@@ -144,10 +144,10 @@ class _ActionButton extends StatelessWidget {
       ),
       child: Row(
         children: const [
-          Icon(Icons.arrow_forward, size: 16, color: AppColors.primaryBase),
+          Icon(Icons.logout, size: 16, color: AppColors.primaryBase),
           SizedBox(width: 4),
           Text(
-            "Detail",
+            "Logout",
             style: TextStyle(
               color: AppColors.primaryBase,
               fontWeight: FontWeight.w600,
