@@ -1,5 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/legacy.dart';
+import 'package:mobile_flutter/core/state/auth_user_provider.dart';
 import 'package:mobile_flutter/feature/auth/domain/entity/login_response_entity.dart';
 import 'package:mobile_flutter/feature/auth/domain/usecase/login_usecase.dart';
 import 'package:mobile_flutter/feature/auth/presentation/provider/auth_shared_provider.dart';
@@ -21,7 +22,7 @@ class LoginNotifier extends StateNotifier<AsyncValue<LoginResponseEntity?>> {
     state = result.fold(
       (failure) => AsyncValue.error(failure, StackTrace.current),
       (loginResponse) {
-        // ref.read(authUserProvider.notifier).state = loginResponse.user;
+        ref.read(authUserProvider.notifier).state = loginResponse.user;
 
         final authRepository = ref.read(authRepositoryProvider);
         authRepository.saveUser(loginResponse.user);
