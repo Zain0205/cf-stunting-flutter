@@ -1,28 +1,35 @@
 import 'package:flutter/material.dart';
-import '../../domain/entity/question_entity.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:mobile_flutter/feature/cf_diagnosis/domain/entity/question_entity.dart';
+import 'package:mobile_flutter/feature/cf_diagnosis/presentation/provider/quisioner_provider.dart';
 import '../../../../core/widget/custom_select_field.dart';
 
-class QuestionItem extends StatefulWidget {
+class QuestionItem extends ConsumerWidget {
   final QuestionEntity question;
 
   const QuestionItem({super.key, required this.question});
 
   @override
-  State<QuestionItem> createState() => _QuestionItemState();
-}
+  Widget build(BuildContext context, WidgetRef ref) {
+    final answers = ref.watch(answerStateProvider);
 
-class _QuestionItemState extends State<QuestionItem> {
-  String? selectedValue;
+    // answer_key yang tersimpan (contoh: "0")
+    final selectedAnswerKey = answers[question.code]?.answerKey;
 
-  @override
-  Widget build(BuildContext context) {
-    final optionsLabel = widget.question.options.map((e) => e.label).toList();
+    // mapping label list
+    final optionsLabel = question.options.map((e) => e.label).toList();
+
+    // konversi answer_key -> label untuk value dropdown
+    final selectedLabel = question.options
+        .where((e) => e.answerKey == selectedAnswerKey)
+        .map((e) => e.label)
+        .firstOrNull;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          widget.question.text,
+          question.text,
           style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
         ),
         const SizedBox(height: 8),
@@ -30,12 +37,20 @@ class _QuestionItemState extends State<QuestionItem> {
           label: "Jawaban",
           hint: "Pilih jawaban",
           options: optionsLabel,
-          value: selectedValue,
+          value: selectedLabel,
           isRequired: true,
-          onChanged: (val) {
-            setState(() {
-              selectedValue = val;
-            });
+          onChanged: (label) {
+            // cari option berdasarkan label
+            final selectedOption = question.options.firstWhere(
+              (e) => e.label == label,
+            );
+
+            ref
+                .read(answerStateProvider.notifier)
+                .setAnswer(
+                  questionCode: question.code,
+                  answerKey: selectedOption.answerKey, // ✅ BENAR
+                );
           },
         ),
       ],

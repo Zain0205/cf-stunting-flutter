@@ -10,6 +10,7 @@ class QuisionerScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    // Watch data pertanyaan
     final state = ref.watch(questionProvider);
 
     return Scaffold(
@@ -30,7 +31,7 @@ class QuisionerScreen extends ConsumerWidget {
       ),
       body: state.when(
         loading: () => const Center(child: CircularProgressIndicator()),
-        error: (e, _) => Center(child: Text(e.toString())),
+        error: (e, _) => Center(child: Text("Terjadi kesalahan: $e")),
         data: (data) => ListView.separated(
           padding: const EdgeInsets.all(16),
           itemCount: data.domains.length + 1,
