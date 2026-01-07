@@ -19,28 +19,9 @@ class SplashScreen extends ConsumerWidget {
     return Scaffold(
       backgroundColor: Colors.white,
       body: Center(
-        child: Image.network(
-          'https://apidemo2.ziadsistem.com/assets/Logo1734860534.png',
+        child: Image.asset(
+          'assets/images/splash.png',
           width: 200,
-          loadingBuilder:
-              (
-                BuildContext context,
-                Widget child,
-                ImageChunkEvent? loadingProgress,
-              ) {
-                if (loadingProgress == null) {
-                  return child;
-                } else {
-                  return Center(
-                    child: CircularProgressIndicator(
-                      value: loadingProgress.expectedTotalBytes != null
-                          ? loadingProgress.cumulativeBytesLoaded /
-                                (loadingProgress.expectedTotalBytes ?? 1)
-                          : null,
-                    ),
-                  );
-                }
-              },
           errorBuilder:
               (BuildContext context, Object error, StackTrace? stackTrace) {
                 return const Center(
