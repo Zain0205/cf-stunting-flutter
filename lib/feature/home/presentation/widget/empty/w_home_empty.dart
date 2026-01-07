@@ -12,7 +12,7 @@ class WHomeEmpty extends StatelessWidget {
       height: MediaQuery.of(context).size.height - 100,
       width: double.infinity,
       child: Padding(
-        padding: const EdgeInsets.only(top: 40),
+        padding: const EdgeInsets.only(top: 0),
         child: Center(
           child: Column(
             mainAxisSize: MainAxisSize.min,
@@ -41,7 +41,6 @@ class WHomeEmpty extends StatelessWidget {
                   },
                 ),
               ),
-              const SizedBox(height: 50),
             ],
           ),
         ),
