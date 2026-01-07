@@ -1,7 +1,9 @@
 import 'package:go_router/go_router.dart';
 import 'package:mobile_flutter/feature/auth/presentation/screen/login_screen.dart';
 import 'package:mobile_flutter/feature/auth/presentation/screen/register_screen.dart';
+import 'package:mobile_flutter/feature/cf_diagnosis/domain/entity/diagnosis_history_entity.dart';
 import 'package:mobile_flutter/feature/cf_diagnosis/presentation/screen/quisioner_screen.dart';
+import 'package:mobile_flutter/feature/home/presentation/screen/history_detail_screen.dart';
 import 'package:mobile_flutter/feature/home/presentation/screen/home_screen.dart';
 import 'package:mobile_flutter/feature/onboarding/presentation/screen/onboarding_screen.dart';
 import 'package:mobile_flutter/feature/splash/presentation/screen/splash_screen.dart';
@@ -10,7 +12,7 @@ import 'package:mobile_flutter/routes/route_transition.dart';
 
 class AppRoutes {
   static final GoRouter router = GoRouter(
-    initialLocation: RoutePath.splash,
+    initialLocation: RoutePath.onboarding,
     debugLogDiagnostics: true,
     routes: [
       GoRoute(
@@ -42,6 +44,16 @@ class AppRoutes {
         path: RoutePath.quisioner,
         pageBuilder: (context, state) =>
             RouteTransitions.cupertino(child: QuisionerScreen(), state: state),
+      ),
+      GoRoute(
+        path: RoutePath.historyDetail,
+        pageBuilder: (context, state) {
+          final detail = state.extra as DiagnosisHistoryEntity;
+          return RouteTransitions.cupertino(
+            child: HistoryDetailScreen(history: detail),
+            state: state,
+          );
+        },
       ),
     ],
   );

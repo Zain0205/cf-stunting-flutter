@@ -5,4 +5,5 @@ class RoutePath {
   static const String onboarding = '/onboarding';
   static const String mainNavigation = '/home';
   static const String quisioner = '/quiz';
+  static const String historyDetail = '/history';
 }
