@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
+
 import 'package:mobile_flutter/core/resource/app_colors.dart';
 import 'package:mobile_flutter/core/widget/custom_from_input.dart';
 import 'package:mobile_flutter/core/widget/primary_button.dart';
+import 'package:mobile_flutter/core/widget/loading_dialog.dart';
 import 'package:mobile_flutter/feature/auth/presentation/provider/login_provider.dart';
 import 'package:mobile_flutter/routes/route_path.dart';
 
@@ -40,14 +42,22 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
+    /// 🔥 LISTEN LOGIN STATE (SIDE EFFECT ONLY)
     ref.listen<AsyncValue>(loginStateProvider, (previous, next) {
-      next.whenOrNull(
+      next.when(
+        loading: () {
+          LoadingDialog.show(context);
+        },
         data: (data) {
+          LoadingDialog.hide(context);
+
           if (data != null) {
             context.go(RoutePath.mainNavigation);
           }
         },
         error: (error, _) {
+          LoadingDialog.hide(context);
+
           ScaffoldMessenger.of(
             context,
           ).showSnackBar(SnackBar(content: Text(error.toString())));
@@ -55,27 +65,21 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
       );
     });
 
-    final loginState = ref.watch(loginStateProvider);
-
     return Scaffold(
       body: Stack(
         children: [
-          // 🔥 BACKGROUND LAYER
+          /// 🌈 BACKGROUND
           Container(
             decoration: const BoxDecoration(
               gradient: LinearGradient(
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
-                colors: [
-                  Color(0xFF1E3A8A), // deep blue
-                  Color(0xFF2563EB), // modern primary
-                  Colors.white,
-                ],
+                colors: [Color(0xFF1E3A8A), Color(0xFF2563EB), Colors.white],
               ),
             ),
           ),
 
-          // 🧠 CONTENT
+          /// 🧠 CONTENT
           SafeArea(
             child: SingleChildScrollView(
               child: SizedBox(
@@ -84,7 +88,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                     MediaQuery.of(context).padding.top,
                 child: Column(
                   children: [
-                    // 🧩 HERO SECTION
+                    /// 🧩 HERO
                     Expanded(
                       flex: 2,
                       child: Padding(
@@ -99,7 +103,6 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                 fontSize: 40,
                                 fontWeight: FontWeight.w800,
                                 color: Colors.white,
-                                height: 1.1,
                               ),
                             ),
                             SizedBox(height: 12),
@@ -115,7 +118,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                       ),
                     ),
 
-                    // 🪟 FORM CARD
+                    /// 🪟 FORM
                     Expanded(
                       flex: 3,
                       child: Container(
@@ -143,23 +146,22 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                               isRequired: true,
                             ),
                             const SizedBox(height: 32),
-                            PrimaryButton(
-                              textButton: loginState.isLoading
-                                  ? "Memproses..."
-                                  : "Masuk",
-                              onTap: loginState.isLoading ? null : _onLogin,
-                            ),
+
+                            /// 🔘 LOGIN BUTTON (NO LOADING STATE)
+                            PrimaryButton(textButton: "Masuk", onTap: _onLogin),
+
+                            const SizedBox(height: 8),
+
                             Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 Text(
-                                  'Belum punya akun? ',
+                                  'Belum punya akun?',
                                   style: TextStyle(
                                     fontSize: 12,
                                     color: Colors.grey.shade500,
                                   ),
-                                  textAlign: TextAlign.center,
                                 ),
-
                                 TextButton(
                                   onPressed: () {
                                     context.go(RoutePath.register);
@@ -170,21 +172,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                       fontSize: 12,
                                       color: AppColors.primaryBase,
                                     ),
-                                    textAlign: TextAlign.center,
                                   ),
                                 ),
                               ],
-                            ),
-                            const SizedBox(height: 24),
-                            Center(
-                              child: Text(
-                                'Dengan masuk, Anda menyetujui kebijakan kami',
-                                style: TextStyle(
-                                  fontSize: 12,
-                                  color: Colors.grey.shade500,
-                                ),
-                                textAlign: TextAlign.center,
-                              ),
                             ),
                           ],
                         ),

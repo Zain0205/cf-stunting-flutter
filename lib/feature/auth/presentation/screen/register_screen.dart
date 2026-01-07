@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mobile_flutter/core/resource/app_colors.dart';
 import 'package:mobile_flutter/core/widget/custom_from_input.dart';
 import 'package:mobile_flutter/core/widget/custom_select_field.dart';
+import 'package:mobile_flutter/core/widget/loading_dialog.dart';
 import 'package:mobile_flutter/core/widget/primary_button.dart';
 import 'package:mobile_flutter/feature/auth/presentation/provider/register_provider.dart';
 import 'package:mobile_flutter/routes/route_path.dart';
@@ -43,7 +44,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
     super.dispose();
   }
 
-  void _onRegister() {
+  void _onRegister() async {
     if (_selectedCategory == null) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Pilih kategori terlebih dahulu')),
@@ -51,7 +52,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
       return;
     }
 
-    ref
+    await ref
         .read(registerStateProvider.notifier)
         .register(
           _nameController.text.trim(),
@@ -64,6 +65,27 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
   @override
   Widget build(BuildContext context) {
     final registerState = ref.watch(registerStateProvider);
+    ref.listen<AsyncValue>(registerStateProvider, (previous, next) {
+      next.when(
+        loading: () {
+          LoadingDialog.show(context);
+        },
+        data: (data) {
+          LoadingDialog.hide(context);
+
+          if (data != null) {
+            context.go(RoutePath.login);
+          }
+        },
+        error: (error, _) {
+          LoadingDialog.hide(context);
+
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(SnackBar(content: Text(error.toString())));
+        },
+      );
+    });
 
     ref.listen(registerStateProvider, (previous, next) {
       next.whenOrNull(
@@ -96,17 +118,14 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
 
           // 🧠 CONTENT
           SafeArea(
-            child: SingleChildScrollView(
-              child: SizedBox(
-                height:
-                    MediaQuery.of(context).size.height -
-                    MediaQuery.of(context).padding.top,
-                child: Column(
-                  children: [
-                    // 🧩 HERO SECTION
-                    Expanded(
-                      flex: 2,
-                      child: Padding(
+            child: Stack(
+              children: [
+                SingleChildScrollView(
+                  physics: const ClampingScrollPhysics(),
+                  child: Column(
+                    children: [
+                      Container(
+                        height: 270,
                         padding: const EdgeInsets.symmetric(horizontal: 24),
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
@@ -132,14 +151,23 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                           ],
                         ),
                       ),
-                    ),
 
-                    // 🪟 FORM CARD
-                    Expanded(
-                      flex: 4,
-                      child: Container(
+                      // 🪟 FORM CARD
+                      Container(
                         width: double.infinity,
-                        padding: const EdgeInsets.fromLTRB(24, 32, 24, 24),
+                        padding: EdgeInsets.fromLTRB(
+                          24,
+                          24,
+                          24,
+                          MediaQuery.of(context).padding.bottom + 24,
+                        ),
+                        constraints: BoxConstraints(
+                          minHeight:
+                              MediaQuery.of(context).size.height -
+                              MediaQuery.of(context).padding.top -
+                              MediaQuery.of(context).padding.bottom -
+                              200,
+                        ),
                         decoration: const BoxDecoration(
                           color: Colors.white,
                           borderRadius: BorderRadius.vertical(
@@ -225,26 +253,13 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                                 ),
                               ],
                             ),
-
-                            const SizedBox(height: 24),
-
-                            Center(
-                              child: Text(
-                                'Dengan mendaftar, Anda menyetujui kebijakan privasi kami',
-                                style: TextStyle(
-                                  fontSize: 12,
-                                  color: Colors.grey.shade500,
-                                ),
-                                textAlign: TextAlign.center,
-                              ),
-                            ),
                           ],
                         ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-              ),
+              ],
             ),
           ),
         ],
