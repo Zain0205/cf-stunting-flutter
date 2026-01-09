@@ -58,7 +58,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
             const SizedBox(height: 50),
             const Center(
               child: Text(
-                "Stunting Screening",
+                "Sistem Pakar",
                 style: TextStyle(
                   fontSize: 30,
                   fontWeight: FontWeight.bold,
