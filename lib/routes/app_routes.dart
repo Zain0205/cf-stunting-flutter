@@ -12,7 +12,7 @@ import 'package:mobile_flutter/routes/route_transition.dart';
 
 class AppRoutes {
   static final GoRouter router = GoRouter(
-    initialLocation: RoutePath.onboarding,
+    initialLocation: RoutePath.splash,
     debugLogDiagnostics: true,
     routes: [
       GoRoute(
