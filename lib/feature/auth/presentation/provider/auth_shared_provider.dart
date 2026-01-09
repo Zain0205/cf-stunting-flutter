@@ -5,6 +5,7 @@ import 'package:mobile_flutter/core/network/dio_client_provider.dart';
 import 'package:mobile_flutter/feature/auth/data/datasource/auth_local_datasource.dart';
 import 'package:mobile_flutter/feature/auth/data/datasource/auth_remote_datasource.dart';
 import 'package:mobile_flutter/feature/auth/data/repository/auth_repository_impl.dart';
+import 'package:mobile_flutter/feature/auth/domain/usecase/logout_usecase.dart';
 
 final authLocalDataSourceProvider = Provider<AuthLocalDataSource>((ref) {
   return AuthLocalDataSource(ref.watch(storageServiceSyncProvider));
@@ -19,4 +20,8 @@ final authRepositoryProvider = Provider<AuthRepositoryImpl>((ref) {
     remoteDataSource: ref.watch(authRemoteDataSourceProvider),
     localDataSource: ref.watch(authLocalDataSourceProvider),
   );
+});
+
+final logoutUsaseProvider = Provider<LogoutUsecase>((ref) {
+  return LogoutUsecase(ref.watch(authRepositoryProvider));
 });
