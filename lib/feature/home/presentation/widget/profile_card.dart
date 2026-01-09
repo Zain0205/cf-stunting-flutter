@@ -1,5 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:mobile_flutter/core/resource/app_colors.dart';
+import 'package:mobile_flutter/core/widget/confirmation_dialog.dart';
+import 'package:mobile_flutter/core/widget/loading_dialog.dart';
+import 'package:mobile_flutter/feature/auth/presentation/provider/auth_shared_provider.dart';
+import 'package:mobile_flutter/routes/route_path.dart';
 
 class ProfileCard extends StatelessWidget {
   final String name;
@@ -133,27 +139,64 @@ class _Body extends StatelessWidget {
   }
 }
 
-class _ActionButton extends StatelessWidget {
+class _ActionButton extends ConsumerWidget {
+  const _ActionButton();
+
   @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
-      decoration: BoxDecoration(
-        color: AppColors.lightPrimaryBase,
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: Row(
-        children: const [
-          Icon(Icons.logout, size: 16, color: AppColors.primaryBase),
-          SizedBox(width: 4),
-          Text(
-            "Logout",
-            style: TextStyle(
-              color: AppColors.primaryBase,
-              fontWeight: FontWeight.w600,
+  Widget build(BuildContext context, WidgetRef ref) {
+    return GestureDetector(
+      onTap: () {
+        ConfirmationDialog.show(
+          context: context,
+          title: 'Logout',
+          message: 'Apakah kamu yakin ingin keluar?',
+          confirmText: 'Ya, keluar',
+          cancelText: 'Batal',
+          icon: Icons.logout,
+          iconColor: AppColors.primaryRed,
+          onConfirm: () async {
+            final logoutUsecase = ref.read(logoutUsaseProvider);
+
+            LoadingDialog.show(context);
+
+            final result = await logoutUsecase();
+
+            if (!context.mounted) return;
+
+            LoadingDialog.hide(context);
+
+            result.fold(
+              (failure) {
+                ScaffoldMessenger.of(
+                  context,
+                ).showSnackBar(SnackBar(content: Text(failure.message)));
+              },
+              (_) {
+                context.go(RoutePath.splash);
+              },
+            );
+          },
+        );
+      },
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+        decoration: BoxDecoration(
+          color: AppColors.lightPrimaryBase,
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: const Row(
+          children: [
+            Icon(Icons.logout, size: 16, color: AppColors.primaryBase),
+            SizedBox(width: 4),
+            Text(
+              "Logout",
+              style: TextStyle(
+                color: AppColors.primaryBase,
+                fontWeight: FontWeight.w600,
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
