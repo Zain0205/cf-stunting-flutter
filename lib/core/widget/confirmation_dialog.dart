@@ -63,7 +63,7 @@ class ConfirmationDialog extends StatelessWidget {
             Icon(
               icon ?? Icons.info_outline_rounded,
               size: 48,
-              color: iconColor ?? AppColors.primaryBase,
+              color: iconColor ?? AppColors.primary,
             ),
             const SizedBox(height: 16),
             Text(
@@ -90,7 +90,7 @@ class ConfirmationDialog extends StatelessWidget {
                       onCancel?.call();
                     },
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: AppColors.grey,
+                      backgroundColor: Colors.grey,
                       foregroundColor: Colors.white,
                       padding: const EdgeInsets.symmetric(vertical: 12),
                       shape: RoundedRectangleBorder(
@@ -111,7 +111,7 @@ class ConfirmationDialog extends StatelessWidget {
                       onConfirm?.call();
                     },
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: AppColors.primaryBase,
+                      backgroundColor: AppColors.primary,
                       foregroundColor: Colors.white,
                       padding: const EdgeInsets.symmetric(vertical: 12),
                       shape: RoundedRectangleBorder(
