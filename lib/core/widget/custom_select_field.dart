@@ -60,7 +60,7 @@ class CustomSelectField extends StatelessWidget {
                     height: 5,
                     margin: const EdgeInsets.only(top: 12, bottom: 8),
                     decoration: BoxDecoration(
-                      color: AppColors.greyMedium,
+                      color: Colors.grey,
                       borderRadius: BorderRadius.circular(8),
                     ),
                   ),
@@ -134,14 +134,14 @@ class CustomSelectField extends StatelessWidget {
                                   ),
                                   decoration: BoxDecoration(
                                     color: isSelected
-                                        ? AppColors.primaryBase.withValues(
+                                        ? AppColors.primary.withValues(
                                             alpha: .1,
                                           )
                                         : Colors.transparent,
                                     borderRadius: BorderRadius.circular(12),
                                     border: Border.all(
                                       color: isSelected
-                                          ? AppColors.primaryBase
+                                          ? AppColors.primary
                                           : Colors.transparent,
                                       width: 1.5,
                                     ),
@@ -154,7 +154,7 @@ class CustomSelectField extends StatelessWidget {
                                         height: 40,
                                         decoration: BoxDecoration(
                                           color: isSelected
-                                              ? AppColors.primaryBase
+                                              ? AppColors.primary
                                               : Colors.blue.shade100,
                                           borderRadius: BorderRadius.circular(
                                             10,
@@ -168,7 +168,7 @@ class CustomSelectField extends StatelessWidget {
                                             style: TextStyle(
                                               color: isSelected
                                                   ? Colors.white
-                                                  : AppColors.primaryBase,
+                                                  : AppColors.primary,
                                               fontWeight: FontWeight.w600,
                                               fontSize: 16,
                                             ),
@@ -186,7 +186,7 @@ class CustomSelectField extends StatelessWidget {
                                                 ? FontWeight.w600
                                                 : FontWeight.w400,
                                             color: isSelected
-                                                ? AppColors.primaryBase
+                                                ? AppColors.primary
                                                 : Colors.black87,
                                           ),
                                         ),
@@ -195,7 +195,7 @@ class CustomSelectField extends StatelessWidget {
                                       if (isSelected)
                                         Icon(
                                           Icons.check_circle,
-                                          color: AppColors.primaryBase,
+                                          color: AppColors.primary,
                                           size: 24,
                                         ),
                                     ],
@@ -241,7 +241,7 @@ class CustomSelectField extends StatelessWidget {
                 style: TextStyle(
                   fontWeight: FontWeight.w500,
                   fontSize: 12,
-                  color: AppColors.primaryRed,
+                  color: AppColors.danger,
                 ),
               ),
             ],
@@ -260,7 +260,7 @@ class CustomSelectField extends StatelessWidget {
                 suffixIcon: const Icon(Icons.keyboard_arrow_down),
                 filled: true,
                 fillColor: isActive
-                    ? AppColors.lightGrey
+                    ? Colors.grey
                     : const Color(0xFFEBEBEB).withValues(alpha: .54),
                 contentPadding: const EdgeInsets.symmetric(
                   vertical: 18,
@@ -270,7 +270,7 @@ class CustomSelectField extends StatelessWidget {
                   borderRadius: BorderRadius.circular(12),
                   borderSide: BorderSide(
                     color: isActive
-                        ? AppColors.primaryBase
+                        ? AppColors.primary
                         : const Color(0xFF202020).withValues(alpha: .5),
                     width: 1,
                   ),
@@ -279,17 +279,14 @@ class CustomSelectField extends StatelessWidget {
                   borderRadius: BorderRadius.circular(12),
                   borderSide: BorderSide(
                     color: isActive
-                        ? AppColors.primaryBase
+                        ? AppColors.primary
                         : const Color(0xFF202020).withValues(alpha: .5),
                     width: 1,
                   ),
                 ),
                 focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
-                  borderSide: const BorderSide(
-                    color: AppColors.primaryBase,
-                    width: 1,
-                  ),
+                  borderSide: BorderSide(color: AppColors.primary, width: 1),
                 ),
               ),
             ),
