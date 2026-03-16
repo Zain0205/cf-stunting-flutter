@@ -3,6 +3,11 @@ import 'package:mobile_flutter/feature/auth/presentation/screen/login_screen.dar
 import 'package:mobile_flutter/feature/auth/presentation/screen/register_screen.dart';
 import 'package:mobile_flutter/feature/cf_diagnosis/domain/entity/diagnosis_history_entity.dart';
 import 'package:mobile_flutter/feature/cf_diagnosis/presentation/screen/quisioner_screen.dart';
+import 'package:mobile_flutter/feature/education/presentation/screen/ciri_screen.dart';
+import 'package:mobile_flutter/feature/education/presentation/screen/data_screen.dart';
+import 'package:mobile_flutter/feature/education/presentation/screen/pencegahan_screen.dart';
+import 'package:mobile_flutter/feature/education/presentation/screen/pengertian_screen.dart';
+import 'package:mobile_flutter/feature/education/presentation/screen/resiko_screen.dart';
 import 'package:mobile_flutter/feature/home/presentation/screen/history_detail_screen.dart';
 import 'package:mobile_flutter/feature/home/presentation/screen/home_screen.dart';
 import 'package:mobile_flutter/feature/onboarding/presentation/screen/onboarding_screen.dart';
@@ -41,9 +46,34 @@ class AppRoutes {
             RouteTransitions.cupertino(child: HomeScreen(), state: state),
       ),
       GoRoute(
+        path: RoutePath.pengertian,
+        pageBuilder: (context, state) =>
+            RouteTransitions.cupertino(child: PengertianScreen(), state: state),
+      ),
+      GoRoute(
         path: RoutePath.quisioner,
         pageBuilder: (context, state) =>
             RouteTransitions.cupertino(child: QuisionerScreen(), state: state),
+      ),
+      GoRoute(
+        path: RoutePath.data,
+        pageBuilder: (context, state) =>
+            RouteTransitions.cupertino(child: DataScreen(), state: state),
+      ),
+      GoRoute(
+        path: RoutePath.ciri,
+        pageBuilder: (context, state) =>
+            RouteTransitions.cupertino(child: CiriScreen(), state: state),
+      ),
+      GoRoute(
+        path: RoutePath.resiko,
+        pageBuilder: (context, state) =>
+            RouteTransitions.cupertino(child: ResikoScreen(), state: state),
+      ),
+      GoRoute(
+        path: RoutePath.pencegahan,
+        pageBuilder: (context, state) =>
+            RouteTransitions.cupertino(child: PencegahanScreen(), state: state),
       ),
       GoRoute(
         path: RoutePath.historyDetail,
