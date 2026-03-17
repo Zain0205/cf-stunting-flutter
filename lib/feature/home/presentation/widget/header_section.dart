@@ -7,7 +7,6 @@ import 'package:mobile_flutter/core/resource/responsive_helper.dart';
 import 'package:mobile_flutter/core/widget/confirmation_dialog.dart';
 import 'package:mobile_flutter/core/widget/info_chip.dart';
 import 'package:mobile_flutter/core/widget/loading_dialog.dart';
-import 'package:mobile_flutter/core/widget/stat_item.dart';
 import 'package:mobile_flutter/core/widget/user_avatar.dart';
 import 'package:mobile_flutter/feature/auth/presentation/provider/auth_shared_provider.dart';
 import 'package:mobile_flutter/routes/route_path.dart';
