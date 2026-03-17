@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:mobile_flutter/core/resource/responsive_helper.dart';
-import 'package:mobile_flutter/routes/route_path.dart';
 
 /// Single card inside the education carousel.
 class CarouselCard extends StatelessWidget {
