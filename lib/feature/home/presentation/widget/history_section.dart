@@ -6,8 +6,6 @@ import 'package:mobile_flutter/feature/home/presentation/widget/history_card.dar
 import 'package:mobile_flutter/feature/home/presentation/widget/history_card_wrapper.dart';
 import 'package:mobile_flutter/feature/home/presentation/widget/skrining_button.dart';
 
-/// Displays the list of past screening history, an empty state,
-/// and a button to start a new screening.
 class HistorySection extends StatelessWidget {
   final List histories;
   final ResponsiveHelper r;
@@ -32,18 +30,26 @@ class HistorySection extends StatelessWidget {
             r: r,
             trailing: SkriningButton(r: r, onTap: onSkrining),
           ),
-          SizedBox(height: r.sp(14)),
+
+          // spacing kecil saja
+          SizedBox(height: r.sp(8)),
+
           if (histories.isEmpty)
             const WHomeEmpty()
           else
             ListView.separated(
+              padding: EdgeInsets.zero, // 🔥 penting
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
               itemCount: histories.length,
+
               separatorBuilder: (_, __) => SizedBox(height: r.sp(12)),
-              itemBuilder: (_, index) => HistoryCardWrapper(
-                child: HistoryCard(history: histories[index]),
-              ),
+
+              itemBuilder: (_, index) {
+                final history = histories[index];
+
+                return HistoryCardWrapper(child: HistoryCard(history: history));
+              },
             ),
         ],
       ),
