@@ -1,48 +1,82 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mobile_flutter/core/resource/app_colors.dart';
-import '../provider/quisioner_provider.dart';
-import '../widget/domain_section.dart';
-import '../widget/submit_button.dart';
+import 'package:mobile_flutter/core/resource/responsive_helper.dart';
+
+import 'package:mobile_flutter/feature/cf_diagnosis/domain/entity/domain_entity.dart';
+import 'package:mobile_flutter/feature/cf_diagnosis/presentation/provider/quisioner_provider.dart';
+import 'package:mobile_flutter/feature/cf_diagnosis/presentation/widget/domain_section.dart';
+import 'package:mobile_flutter/feature/cf_diagnosis/presentation/widget/quisioner_header.dart';
+import 'package:mobile_flutter/feature/cf_diagnosis/presentation/widget/quisioner_states.dart';
+import 'package:mobile_flutter/feature/cf_diagnosis/presentation/widget/submit_button.dart';
 
 class QuisionerScreen extends ConsumerWidget {
   const QuisionerScreen({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // Watch data pertanyaan
+    final r = ResponsiveHelper(context);
     final state = ref.watch(questionProvider);
+    final topPad = MediaQuery.of(context).padding.top;
+    final headerHeight = topPad + (r.isSmall ? 80.0 : 96.0);
 
     return Scaffold(
-      backgroundColor: AppColors.white,
-      appBar: AppBar(
-        foregroundColor: AppColors.white,
-        toolbarHeight: 72,
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        centerTitle: true,
-        flexibleSpace: Container(
-          decoration: BoxDecoration(gradient: AppColors.blueGradient),
-        ),
-        title: const Padding(
-          padding: EdgeInsets.only(bottom: 12),
-          child: Text("Form Quisioner"),
-        ),
+      backgroundColor: AppColors.background,
+      body: Stack(
+        children: [
+          // ── SCROLLABLE CONTENT ────────────────────────────────────────
+          CustomScrollView(
+            physics: const BouncingScrollPhysics(),
+            slivers: [
+              // Space below persistent header
+              SliverToBoxAdapter(child: SizedBox(height: headerHeight + 8)),
+
+              // Questions + submit
+              SliverPadding(
+                padding: EdgeInsets.fromLTRB(16, r.sp(16), 16, r.sp(40)),
+                sliver: state.when(
+                  loading: () =>
+                      SliverToBoxAdapter(child: QuisionerLoadingShimmer(r: r)),
+                  error: (e, _) => SliverToBoxAdapter(
+                    child: QuisionerErrorCard(message: e.toString(), r: r),
+                  ),
+                  data: (data) => _QuestionSliver(domains: data.domains, r: r),
+                ),
+              ),
+            ],
+          ),
+
+          // ── PERSISTENT HEADER ─────────────────────────────────────────
+          Positioned(top: 0, left: 0, right: 0, child: QuisionerHeader(r: r)),
+        ],
       ),
-      body: state.when(
-        loading: () => const Center(child: CircularProgressIndicator()),
-        error: (e, _) => Center(child: Text("Terjadi kesalahan: $e")),
-        data: (data) => ListView.separated(
-          padding: const EdgeInsets.all(16),
-          itemCount: data.domains.length + 1,
-          separatorBuilder: (_, __) => const SizedBox(height: 24),
-          itemBuilder: (context, index) {
-            if (index == data.domains.length) {
-              return const SubmitButton();
-            }
-            return DomainSection(domain: data.domains[index]);
-          },
-        ),
+    );
+  }
+}
+
+// ── Question sliver ───────────────────────────────────────────────────────────
+
+/// Builds the flat list of domain sections + submit button as a [SliverList].
+class _QuestionSliver extends StatelessWidget {
+  final List<DomainEntity> domains;
+  final ResponsiveHelper r;
+
+  const _QuestionSliver({required this.domains, required this.r});
+
+  @override
+  Widget build(BuildContext context) {
+    final items = <Widget>[
+      for (int i = 0; i < domains.length; i++) ...[
+        DomainSection(domain: domains[i], domainIndex: i, r: r),
+        SizedBox(height: r.sp(16)),
+      ],
+      SubmitButton(r: r),
+    ];
+
+    return SliverList(
+      delegate: SliverChildBuilderDelegate(
+        (_, index) => items[index],
+        childCount: items.length,
       ),
     );
   }
