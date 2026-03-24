@@ -17,6 +17,7 @@ class QuestionRemoteDatasourceImpl implements QuestionRemoteDatasource {
 
   @override
   Future<List<DomainModel>> getQuestions() async {
+    // await Future.delayed(const Duration(milliseconds: 5000));
     final response = await dioClient.get('/api/questions');
 
     final domains = response.data['data']['domains'] as List;
@@ -38,6 +39,7 @@ class QuestionRemoteDatasourceImpl implements QuestionRemoteDatasource {
 
   @override
   Future<List<DiagnosisHistoryModel>> getHistory() async {
+    // await Future.delayed(const Duration(milliseconds: 5000));
     final response = await dioClient.get('/api/diagnosis');
 
     return (response.data['data'] as List)
