@@ -1,21 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:mobile_flutter/core/resource/app_colors.dart';
 import 'package:go_router/go_router.dart';
-import 'package:mobile_flutter/core/widget/primary_button.dart';
-import 'package:mobile_flutter/feature/onboarding/presentation/widget/onboarding_page.dart';
-import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
-class OnboardingItem {
-  final String title;
-  final String description;
-  final String image;
-
-  OnboardingItem({
-    required this.title,
-    required this.description,
-    required this.image,
-  });
-}
+import '../widget/onboarding_data.dart';
+import '../widget/onboarding_bg_painter.dart';
+import '../widget/onboarding_bottom_bar.dart';
+import '../widget/onboarding_slide_widget.dart';
+import '../widget/onboarding_top_bar.dart';
 
 class OnboardingScreen extends StatefulWidget {
   const OnboardingScreen({super.key});
@@ -24,106 +14,130 @@ class OnboardingScreen extends StatefulWidget {
   State<OnboardingScreen> createState() => _OnboardingScreenState();
 }
 
-class _OnboardingScreenState extends State<OnboardingScreen> {
-  final controller = PageController();
-  int currentPage = 0;
+class _OnboardingScreenState extends State<OnboardingScreen>
+    with TickerProviderStateMixin {
+  final _pageController = PageController();
+  int _currentPage = 0;
 
-  final List<OnboardingItem> onboardingItems = [
-    OnboardingItem(
-      title: 'Eat Healthy',
-      description:
-          'Maintaining good health should be the primary focus of everyone.',
-      image: 'assets/images/img_empty.png',
-    ),
-    OnboardingItem(
-      title: 'Healthy Recipes',
-      description:
-          'Browse thousands of healthy recipes from all over the world.',
-      image: 'assets/images/img_empty.png',
-    ),
-    OnboardingItem(
-      title: 'Healthy Recipes',
-      description:
-          'Browse thousands of healthy recipes from all over the world.',
-      image: 'assets/images/img_empty.png',
-    ),
-  ];
+  /// Slow-breathing controller — 6s cycle, organic feel.
+  late final AnimationController _breathCtrl;
+
+  /// Entry fade+slide on first load.
+  late final AnimationController _entryCtrl;
+  late final Animation<double> _entryFade;
+  late final Animation<Offset> _entrySlide;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _breathCtrl = AnimationController(
+      vsync: this,
+      duration: const Duration(seconds: 7),
+    )..repeat(reverse: true);
+
+    _entryCtrl = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 700),
+    )..forward();
+
+    _entryFade = CurvedAnimation(
+      parent: _entryCtrl,
+      curve: const Interval(0.0, 0.80, curve: Curves.easeOut),
+    );
+
+    _entrySlide = Tween<Offset>(
+      begin: const Offset(0, 0.05),
+      end: Offset.zero,
+    ).animate(CurvedAnimation(parent: _entryCtrl, curve: Curves.easeOutCubic));
+  }
+
+  @override
+  void dispose() {
+    _pageController.dispose();
+    _breathCtrl.dispose();
+    _entryCtrl.dispose();
+    super.dispose();
+  }
+
+  void _nextPage() {
+    if (_currentPage < onboardingSlides.length - 1) {
+      _pageController.nextPage(
+        duration: const Duration(milliseconds: 450),
+        curve: Curves.easeInOutCubic,
+      );
+    } else {
+      context.go('/register');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
+    final slide = onboardingSlides[_currentPage];
+    final isLast = _currentPage == onboardingSlides.length - 1;
+
     return Scaffold(
-      body: SafeArea(
-        child: Column(
-          children: [
-            const SizedBox(height: 50),
-            const Center(
-              child: Text(
-                "Sistem Pakar",
-                style: TextStyle(
-                  fontSize: 30,
-                  fontWeight: FontWeight.bold,
-                  color: AppColors.primaryBase,
+      backgroundColor: const Color(0xFF0D1B2A),
+      body: Stack(
+        children: [
+          // ── Animated background ──────────────────────────────────────
+          Positioned.fill(
+            child: AnimatedBuilder(
+              animation: _breathCtrl,
+              builder: (_, __) => CustomPaint(
+                painter: OnboardingBgPainter(
+                  progress: _breathCtrl.value,
+                  accent: slide.accent,
                 ),
               ),
             ),
-            const SizedBox(height: 30),
-            Expanded(
-              child: PageView.builder(
-                controller: controller,
-                itemCount: onboardingItems.length,
-                onPageChanged: (int index) {
-                  setState(() {
-                    currentPage = index;
-                  });
-                },
-                itemBuilder: (conte, index) =>
-                    OnboardingPage(item: onboardingItems[index]),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                children: [
-                  SmoothPageIndicator(
-                    controller: controller,
-                    count: onboardingItems.length,
-                    effect: ExpandingDotsEffect(
-                      activeDotColor: AppColors.primaryBase,
-                      dotColor: AppColors.grey,
-                      dotHeight: 8,
-                      dotWidth: 8,
+          ),
+
+          // ── Main content ─────────────────────────────────────────────
+          SafeArea(
+            bottom: false,
+            child: FadeTransition(
+              opacity: _entryFade,
+              child: SlideTransition(
+                position: _entrySlide,
+                child: Column(
+                  children: [
+                    // Top bar
+                    OnboardingTopBar(
+                      slide: slide,
+                      showSkip: !isLast,
+                      onSkip: () => context.go('/register'),
                     ),
-                  ),
-                  const SizedBox(height: 26),
-                  Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 12),
-                    child: PrimaryButton(
-                      textButton: "Get Started",
-                      onTap: () {
-                        context.push('/register');
-                      },
-                    ),
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      const Text("Already have an account?"),
-                      TextButton(
-                        onPressed: () {
-                          context.push('/login');
-                        },
-                        child: Text(
-                          "Login",
-                          style: TextStyle(color: AppColors.primaryBase),
+
+                    // Page view — takes all available space above bottom bar
+                    Expanded(
+                      child: PageView.builder(
+                        controller: _pageController,
+                        itemCount: onboardingSlides.length,
+                        onPageChanged: (i) => setState(() => _currentPage = i),
+                        itemBuilder: (_, index) => OnboardingSlideWidget(
+                          slide: onboardingSlides[index],
+                          breathCtrl: _breathCtrl,
                         ),
                       ),
-                    ],
-                  ),
-                ],
+                    ),
+
+                    // Bottom controls — sits on top of the white panel
+                    OnboardingBottomBar(
+                      currentPage: _currentPage,
+                      total: onboardingSlides.length,
+                      isLast: isLast,
+                      slide: slide,
+                      onNext: _nextPage,
+                      onLogin: () => context.go('/login'),
+                      onSkip: () => context.go('/register'),
+                    ),
+                  ],
+                ),
               ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
